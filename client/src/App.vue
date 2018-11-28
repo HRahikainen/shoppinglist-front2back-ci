@@ -20,7 +20,7 @@
 
 import Form from './components/Form.vue'
 import ListItem from './components/ListItem.vue'
-// import axios from 'axios';
+import axios from 'axios';
 
 export default {
   name: 'app',
@@ -38,25 +38,25 @@ export default {
     };
   },
   mounted () {
-    /*axios
-      .get('https://jsonplaceholder.typicode.com/users')
+    axios
+      .get('http://localhost:3000/items')
       .then(response => {
-        this.shoppingList = response.data.forEach(el => el.name);
+        response.data.item_list.forEach(el =>this.shoppingList.push(el));
       })
       .catch(error => {
         // eslint-disable-next-line 
         console.log(error)
         this.error = true
       })
-      .finally(() => this.loading = false)*/
+      .finally(() => this.loading = false)
   },
   methods: {
 
         addItem() {
             this.shoppingList.push(this.newItem);
-            this.newItem = '';
             this.saveList();
-            //axios.post("/items/create")
+            this.newItem = '';
+            
         },
         validateInput() {
             // Only one or more letters, digits, dots or commas allowed
@@ -70,10 +70,16 @@ export default {
 
         removeItem(index) {
             this.shoppingList.splice(index, 1);
-            this.saveList();
+            //this.saveList();
+            axios.post("http://localhost:3000/items/1/delete", {})
+            // eslint-disable-next-line 
+            .then(res => {}).catch(err => {});
         },
 
         saveList() {
+            axios.post("http://localhost:3000/items/create", {name : this.newItem})
+            // eslint-disable-next-line 
+            .then(res => {}).catch(err => {});
             //const stringifiedList = JSON.stringify(this.shoppingList);
             // Save to db
             //console.log("Saved " + stringifiedList[0]);
@@ -81,7 +87,7 @@ export default {
 
         removeItems() {
             this.shoppingList = [];
-            this.saveList();
+            //this.saveList();
         }
     }
 }

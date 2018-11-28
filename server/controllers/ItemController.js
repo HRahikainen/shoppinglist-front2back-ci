@@ -16,7 +16,7 @@ exports.item_list = (req, res, next) => {
 };
 
 exports.item_create_post = (req, res, next) => {
-  res.status(201).json({ name: "Item" });
+  res.status(201).json({ name: req.body.name });
 };
 
 exports.item_delete_post = (req, res, next) => {
