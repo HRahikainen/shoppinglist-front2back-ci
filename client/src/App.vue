@@ -41,7 +41,7 @@ export default {
     axios
       .get('http://localhost:3000/items')
       .then(response => {
-        response.data.item_list.forEach(el =>this.shoppingList.push(el));
+        response.data.item_list.forEach(el =>this.shoppingList.push(el.name));
       })
       .catch(error => {
         // eslint-disable-next-line 
@@ -79,10 +79,7 @@ export default {
         saveList() {
             axios.post("http://localhost:3000/items/create", {name : this.newItem})
             // eslint-disable-next-line 
-            .then(res => {}).catch(err => {});
-            //const stringifiedList = JSON.stringify(this.shoppingList);
-            // Save to db
-            //console.log("Saved " + stringifiedList[0]);
+            .then(response=>response.data.item_list.forEach(el =>this.shoppingList.push(el.name))).catch(err => {});
         },
 
         removeItems() {

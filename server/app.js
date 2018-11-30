@@ -8,13 +8,16 @@ const cors = require("cors");
 
 const indexRouter = require("./routes/index");
 //Set up mongoose connection
-/*const mongoose = require('mongoose');
-const mongoDB = 'mongodb://mongo:27017/shopping_list';
-mongoose.connect(mongoDB, { useNewUrlParser: true });
+const mongoose = require("mongoose");
+const mongoDB = "mongodb://localhost:27017/shopping_list";
+mongoose.connect(
+  mongoDB,
+  { useNewUrlParser: true }
+);
 mongoose.Promise = global.Promise;
 const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
-*/
+db.on("error", console.error.bind(console, "MongoDB connection error:"));
+
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
