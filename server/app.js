@@ -21,7 +21,8 @@ db.on("error", console.error.bind(console, "MongoDB connection error:"));
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-//app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
+// app.get(/.*/, (req, res) => res.sendFile(__dirname + '/public/index.html'));
 app.use("/", indexRouter);
 const PORT = process.env.PORT || 3000;
 
