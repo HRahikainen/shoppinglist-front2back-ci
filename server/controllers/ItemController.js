@@ -3,7 +3,6 @@
 const Item = require("../models/Item");
 
 exports.item_list = (req, res, next) => {
-  //res.json({ item_list: ["Item 1", "Item 2", "Item 3"] });
   Item.find()
     .sort([["name", "ascending"]])
     .exec(function(err, list_items) {
@@ -12,7 +11,7 @@ exports.item_list = (req, res, next) => {
         return next(err);
       }
       //Successful, so send response
-      res.json({ item_list: list_items });
+      res.status(200).json({ item_list: list_items });
     });
 };
 

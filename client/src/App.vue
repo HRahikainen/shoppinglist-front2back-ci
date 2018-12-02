@@ -11,7 +11,8 @@
                 All
             </a>
         </div>
-        <p class="red-text text-darken-2 flow-text center" v-if="!shoppingList.length">No items on the list yet.</p>
+        <p class="red-text text-darken-2 flow-text center" v-if="!shoppingList.length && !loading && !error">No items on the list yet.</p>
+        <LoadingIndicator v-bind:error="error" v-bind:loading="loading"/>
     </div>
   </div>
 </template>
@@ -20,13 +21,15 @@
 
 import Form from './components/Form.vue'
 import ListItem from './components/ListItem.vue'
+import LoadingIndicator from './components/LoadingIndicator.vue'
 import axios from 'axios';
 
 export default {
   name: 'app',
   components: {
     Form,
-    ListItem
+    ListItem,
+    LoadingIndicator
   },
   data () {
     return {
@@ -41,12 +44,15 @@ export default {
     axios
       .get('http://localhost:3000/items')
       .then(response => {
-        response.data.item_list.forEach(el =>this.shoppingList.push(el.name));
+        if (response.status == 200) {
+            response.data.item_list.forEach(el =>this.shoppingList.push(el.name));
+        }
       })
       .catch(error => {
         // eslint-disable-next-line 
         console.log(error)
-        this.error = true
+        this.error = true;
+        this.loading = false;
       })
       .finally(() => this.loading = false)
   },
@@ -73,7 +79,16 @@ export default {
             //this.saveList();
             axios.post("http://localhost:3000/items/1/delete", {})
             // eslint-disable-next-line 
-            .then(res => {}).catch(err => {});
+            .then(res => {
+                if (res.status == 204) {
+                    this.loading = false;
+                    // eslint-disable-next-line
+                    console.log("Removed");
+                }
+            }).catch(() => {
+                this.error = true;
+                this.loading = false;
+            })
         },
 
         saveList() {
