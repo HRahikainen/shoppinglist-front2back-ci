@@ -10,5 +10,8 @@ router.get("/items", ItemController.item_list);
 
 router.post("/items/create", ItemController.item_create_post);
 
+router.post("/items/all/delete", ItemController.item_all_delete_post);
+
 router.post("/items/:id/delete", ItemController.item_delete_post);
+
 module.exports = router;

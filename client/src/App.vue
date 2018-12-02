@@ -75,8 +75,8 @@ export default {
         },
 
         removeItem(index) {
-            this.shoppingList.splice(index, 1);
-            //this.saveList();
+            let removedItem = this.shoppingList.splice(index, 1);
+            
             axios.post("http://localhost:3000/items/1/delete", {})
             // eslint-disable-next-line 
             .then(res => {
@@ -88,6 +88,8 @@ export default {
             }).catch(() => {
                 this.error = true;
                 this.loading = false;
+                // Return deleted item back on server error.
+                shoppingList.push(removedItem);
             })
         },
 
@@ -98,8 +100,20 @@ export default {
         },
 
         removeItems() {
-            this.shoppingList = [];
-            //this.saveList();
+            
+            axios.post("http://localhost:3000/items/all/delete", {})
+            // eslint-disable-next-line 
+            .then(res => {
+                if (res.status == 204) {
+                    this.loading = false;
+                    this.shoppingList = [];
+                    // eslint-disable-next-line
+                    console.log("Removed all");
+                }
+            }).catch(() => {
+                this.error = true;
+                this.loading = false;
+            })
         }
     }
 }
