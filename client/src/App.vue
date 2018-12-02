@@ -5,7 +5,7 @@
    <div class="row">
         <div class="col s12 m6 offset-m3" id="shopping-list" v-if="shoppingList.length">
             <ul class="collection with-header">
-                <ListItem v-for="(item, index) in shoppingList" v-bind:name="item" v-bind:key="index" @remove="removeItem(index)"/>
+                <ListItem v-for="(item, index) in shoppingList" v-bind:name="item.name" v-bind:key="index" @remove="removeItem(index)"/>
             </ul>
             <a class="waves-effect waves-light btn-small" v-if="shoppingList.length > 1" @click="removeItems">Remove
                 All
@@ -35,31 +35,33 @@ export default {
     return {
      title: 'Shopping list',
      newItem: '',    // Current value of input field "item"
-     shoppingList: [],
+     shoppingList: [], // Array of item objs
      loading: true,
      error: false 
     };
   },
   mounted () {
+      // Get all items from database
+    this.loading = true;
     axios
       .get('http://localhost:3000/items')
       .then(response => {
         if (response.status == 200) {
-            response.data.item_list.forEach(el =>this.shoppingList.push(el.name));
+            response.data.item_list.forEach(el =>this.shoppingList.push(el));
         }
       })
       .catch(error => {
         // eslint-disable-next-line 
         console.log(error)
         this.error = true;
-        this.loading = false;
       })
       .finally(() => this.loading = false)
   },
   methods: {
 
         addItem() {
-            this.shoppingList.push(this.newItem);
+            // Add pseudo obj and meanwhile save to database.
+            this.shoppingList.push({name: this.newItem});
             this.saveList();
             this.newItem = '';
             
@@ -75,41 +77,52 @@ export default {
         },
 
         removeItem(index) {
-            let removedItem = this.shoppingList.splice(index, 1);
-            
-            axios.post("http://localhost:3000/items/1/delete", {})
+            let removedItem = this.shoppingList.splice(index, 1); // Array of deleted el.
+            this.loading = true;
+            axios.post(`http://localhost:3000/items/${removedItem[0]._id}/delete`, {})
             // eslint-disable-next-line 
             .then(res => {
                 if (res.status == 204) {
-                    this.loading = false;
                     // eslint-disable-next-line
                     console.log("Removed");
                 }
+                this.loading = false;
             }).catch(() => {
                 this.error = true;
                 this.loading = false;
                 // Return deleted item back on server error.
-                shoppingList.push(removedItem);
+                this.shoppingList.splice(index, 0, removedItem[0]);
             })
         },
 
         saveList() {
+            this.loading = true;
             axios.post("http://localhost:3000/items/create", {name : this.newItem})
             // eslint-disable-next-line 
-            .then(response=>response.data.item_list.forEach(el =>this.shoppingList.push(el.name))).catch(err => {});
+            .then(response => {
+                // New item was added
+                if (response.status == 201) {
+                    this.shoppingList.pop(); // Pop the placeholder obj w/o id
+                    this.shoppingList.push(response.data.item); // Push full obj
+                } else if (response.status == 200) {
+                    // Exists already, remove placeholder
+                    this.shoppingList.pop();
+                }
+                this.loading = false;
+            }).catch(() => {
+                this.error = true;
+                this.loading = false;
+            });
         },
 
         removeItems() {
-            
+            this.loading = true;
             axios.post("http://localhost:3000/items/all/delete", {})
-            // eslint-disable-next-line 
             .then(res => {
                 if (res.status == 204) {
-                    this.loading = false;
                     this.shoppingList = [];
-                    // eslint-disable-next-line
-                    console.log("Removed all");
                 }
+                this.loading = false;
             }).catch(() => {
                 this.error = true;
                 this.loading = false;

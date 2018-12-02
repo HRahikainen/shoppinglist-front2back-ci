@@ -48,7 +48,22 @@ exports.item_create_post = (req, res, next) => {
 };
 
 exports.item_delete_post = (req, res, next) => {
-  res.sendStatus(204);
+  Item.findById(req.params.id).exec((err, item) => {
+    if (err) {
+      return next(err);
+    }
+    if (item) {
+      Item.findByIdAndRemove(req.params.id, function(err) {
+        if (err) {
+          return next(err);
+        }
+        // Success
+        res.sendStatus(204);
+      });
+    } else {
+      res.sendStatus(404);
+    }
+  });
 };
 
 exports.item_all_delete_post = (req, res, next) => {
