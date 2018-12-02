@@ -1,0 +1,18 @@
+version: "3"
+services:
+  library_app:
+    container_name: shopping_list
+    restart: always
+    build: .
+    ports:
+      - "3000:3000"
+    links:
+      - mongo
+    depends_on:
+      - mongo
+
+  mongo:
+    container_name: mongo
+    image: mongo:latest
+    ports:
+      - "27017"

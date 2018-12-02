@@ -9,7 +9,7 @@ const cors = require("cors");
 const indexRouter = require("./routes/index");
 //Set up mongoose connection
 const mongoose = require("mongoose");
-const mongoDB = "mongodb://localhost:27017/shopping_list";
+const mongoDB = "mongodb://mongo:27017/shopping_list";
 mongoose.connect(
   mongoDB,
   { useNewUrlParser: true }
