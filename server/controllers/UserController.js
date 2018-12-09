@@ -87,3 +87,8 @@ exports.current_get = (req, res, next) => {
     return res.json({ user: user.toAuthJSON() });
   });
 };
+
+exports.logout_get = (req, res, next) => {
+  req.logout();
+  res.sendStatus(200);
+};

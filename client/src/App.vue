@@ -1,8 +1,10 @@
 <template>
   <div class="container" id="app">
    <h1 class="center">{{ title }}</h1>
-   <Form v-model="newItem" @keydown.enter="validateInput"/>
-   <div class="row">
+   <p class="center" v-if="authenticated"><a @click="logout">Logout</a></p>
+   <LoginForm v-if="!authenticated" @authenticated="setAuthenticated"/>
+   <Form v-if="authenticated" v-model="newItem" @keydown.enter="validateInput"/>
+   <div class="row" v-if="authenticated">
         <div class="col s12 m6 offset-m3" id="shopping-list" v-if="shoppingList.length">
             <ul class="collection with-header">
                 <ListItem v-for="(item, index) in shoppingList" v-bind:name="item.name" v-bind:key="index" @remove="removeItem(index)"/>
@@ -18,15 +20,16 @@
 </template>
 
 <script>
-
+import LoginForm from './components/LoginForm.vue'
 import Form from './components/Form.vue'
 import ListItem from './components/ListItem.vue'
 import LoadingIndicator from './components/LoadingIndicator.vue'
-import axios from 'axios';
+import axios from 'axios'
 
 export default {
   name: 'app',
   components: {
+    LoginForm,
     Form,
     ListItem,
     LoadingIndicator
@@ -37,7 +40,8 @@ export default {
      newItem: '',    // Current value of input field "item"
      shoppingList: [], // Array of item objs
      loading: true,
-     error: false 
+     error: false,
+     authenticated: false
     };
   },
   mounted () {
@@ -58,7 +62,24 @@ export default {
       .finally(() => this.loading = false)
   },
   methods: {
-
+      setAuthenticated(status) {
+          this.authenticated = status;
+      },
+      logout() {
+            axios.get('http://localhost:3000/users/logout')
+            .then((response) => {
+                
+                if (response.status == 200) {
+                    // eslint-disable-next-line
+                    console.log("Logged out");
+                    this.authenticated = false;
+                }
+            })
+            .catch(error => {
+                // eslint-disable-next-line 
+                console.log(error)
+            })
+        },
         addItem() {
             // Add pseudo obj and meanwhile save to database.
             this.shoppingList.push({name: this.newItem});
