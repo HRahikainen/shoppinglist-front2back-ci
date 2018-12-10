@@ -12,7 +12,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 //Set up mongoose connection
 const mongoose = require("mongoose");
-const mongoDB = "mongodb://mongo:27017/shopping_list"; //mongo:27017/shopping_list";
+const mongoDB = "mongodb://localhost:27017/shopping_list"; //mongo:27017/shopping_list";
 mongoose.connect(
   mongoDB,
   { useNewUrlParser: true }
@@ -69,8 +69,4 @@ app.use((err, req, res, next) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-
-app.listen(`${PORT}`, () => {
-  console.log(`Server now listening at port ${PORT}.`);
-});
+module.exports = app;
