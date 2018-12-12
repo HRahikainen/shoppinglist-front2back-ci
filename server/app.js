@@ -2,6 +2,7 @@
 
 const express = require("express");
 const session = require("express-session");
+const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
@@ -27,6 +28,7 @@ const isProduction = process.env.NODE_ENV === "production";
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(
   session({
     secret: "passport-tutorial",
