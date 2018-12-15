@@ -5,8 +5,6 @@ const keys = require("../config/keys");
 localmongoose.Promise = global.Promise;
 const Users = require("../models/Users");
 
-afterAll(async () => await localmongoose.disconnect());
-
 describe("Test database connection", () => {
   test("Test connection", done => {
     localmongoose.connect(keys.MONGO_URI).then(() => {
