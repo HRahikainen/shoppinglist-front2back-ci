@@ -9,5 +9,4 @@ cache:
   directories:
     - "node_modules"
 addons:
-  hosts:
-    - mongo
+  hostname: mongo
