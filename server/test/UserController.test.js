@@ -1,11 +1,21 @@
 const app = require("../app");
 const request = require("supertest").agent(app);
-const mongoose = require("mongoose");
+const localmongoose = require("mongoose");
+const keys = require("../config/keys");
+localmongoose.Promise = global.Promise;
+const Users = require("../models/Users");
+
+describe("Test database connection", () => {
+  test("Test connection", done => {
+    localmongoose.connect(keys.MONGO_URI).then(() => {
+      expect(localmongoose.connection.readyState).toBe(1);
+    });
+    localmongoose.disconnect();
+    done();
+  });
+});
 
 describe("Test the logout path", () => {
-  // Check mongo for DNSCHANNEL error!
-  //afterAll(async () => await mongoose.disconnect());
-
   test("It should response the GET method", () => {
     return request.get("/users/logout").then(response => {
       expect(response.statusCode).toBe(200);
