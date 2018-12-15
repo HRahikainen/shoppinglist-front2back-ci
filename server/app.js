@@ -5,6 +5,7 @@ const session = require("express-session");
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const path = require("path");
+const keys = require("./config/keys");
 const app = express();
 const cors = require("cors");
 const errorHandler = require("errorhandler");
@@ -13,7 +14,7 @@ const indexRouter = require("./routes/index");
 const usersRouter = require("./routes/users");
 //Set up mongoose connection
 const mongoose = require("mongoose");
-const mongoDB = "mongodb://localhost:27017/shopping_list"; //mongo:27017/shopping_list";
+const mongoDB = keys.MONGO_URI;
 mongoose.connect(
   mongoDB,
   { useNewUrlParser: true }
