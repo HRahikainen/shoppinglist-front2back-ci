@@ -16,12 +16,14 @@ describe("Test database connection", () => {
 });
 
 describe("Test the logout path", () => {
-  test("It should response the GET method", () => {
+  test("It should respond with 200 to GET method", () => {
     return request.get("/users/logout").then(response => {
       expect(response.statusCode).toBe(200);
     });
   });
+});
 
+describe("Test the users path", () => {
   test("It should return 422 without email for POST method", () => {
     return request
       .post("/users")
@@ -37,6 +39,23 @@ describe("Test the logout path", () => {
       .send({ user: { email: "jdoe@gmail.com" } })
       .then(response => {
         expect(response.statusCode).toBe(422);
+        done();
+      });
+  });
+
+  test("It should return user object with _id, email and token for POST method", done => {
+    return request
+      .post("/users")
+      .send({ user: { email: "jdoe@gmail.com", password: "12345" } })
+      .then(response => {
+        expect(response.headers["content-type"]).toMatch(/application\/json/);
+        expect.objectContaining({
+          user: {
+            _id: expect.any(String),
+            email: expect.any(String),
+            token: expect.any(String)
+          }
+        });
         done();
       });
   });
