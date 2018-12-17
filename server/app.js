@@ -45,10 +45,10 @@ if (!isProduction) {
 
 require("./config/passport");
 
-if (isProduction) {
-  app.use(express.static(path.join(__dirname, "public")));
-  //app.get(/.*/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
-}
+//if (isProduction) {
+app.use(express.static(path.join(__dirname, "public")));
+//app.get(/.*/, (req, res) => res.sendFile(__dirname + "/public/index.html"));
+//}
 app.use("/", indexRouter);
 app.use("/users", usersRouter);
 

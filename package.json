@@ -6,8 +6,8 @@
   "scripts": {
     "start": "node server/server.js",
     "dev": "nodemon server/server.js",
-    "test": "./node_modules/.bin/jest --runInBand --detectOpenHandles --forceExit",
-    "test-docker": "./node_modules/.bin/jest --runInBand --detectOpenHandles"
+    "test": "./node_modules/.bin/jest --runInBand --detectOpenHandles --forceExit ./server/test",
+    "test-docker": "./node_modules/.bin/jest --runInBand --detectOpenHandles ./server/test"
   },
   "repository": {
     "type": "git",
